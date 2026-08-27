@@ -34,6 +34,16 @@ Here it is a function call on public data.
 
 JSON Schemas for the sealed event shapes are in `schemas/`.
 
+## How it works — diagrams
+
+Four diagrams covering the properties that are hardest to convey in prose:
+tamper detection (why re-hashing moves the break instead of hiding the edit),
+correctable-not-erasable, the `verify()` / `audit()` split, and the Ark's
+lapse-and-latch behaviour.
+
+**→ [docs/DIAGRAMS.md](docs/DIAGRAMS.md)** (Mermaid, rendered inline by GitHub)
+PNG versions for sharing are in [`docs/png/`](docs/png).
+
 ## Run the proofs
 
 ```
