@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "charter/receipt.purchase/v1",
+  "title": "Sealed purchase receipt with open unit-economics split",
+  "type": "object",
+  "required": ["schema", "chain_id", "seq", "kind", "ts", "body", "prev_hash", "hash"],
+  "properties": {
+    "schema": { "const": 1 },
+    "chain_id": { "type": "string" },
+    "seq": { "type": "integer", "minimum": 1 },
+    "kind": { "const": "receipt.purchase" },
+    "ts": { "type": "string" },
+    "occurred_at": { "type": "string" },
+    "prev_hash": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "hash": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "body": {
+      "type": "object",
+      "required": ["buyer", "sku", "gross_cents", "splits_cents", "sheet_seq", "sheet_hash"],
+      "properties": {
+        "buyer": { "type": "string", "description": "buyer pseudonym" },
+        "sku": { "type": "string", "description": "must exist on the sealed price sheet at sheet_seq" },
+        "gross_cents": { "type": "integer", "minimum": 0 },
+        "splits_cents": {
+          "type": "object",
+          "required": ["server", "development", "steward", "reserve"],
+          "description": "integer cents; MUST sum exactly to gross_cents (largest-remainder allocation)",
+          "properties": {
+            "server": { "type": "integer", "minimum": 0 },
+            "development": { "type": "integer", "minimum": 0 },
+            "steward": { "type": "integer", "minimum": 0 },
+            "reserve": { "type": "integer", "minimum": 0 }
+          }
+        },
+        "sheet_seq": { "type": "integer", "minimum": 1 },
+        "sheet_hash": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+      }
+    }
+  }
+}

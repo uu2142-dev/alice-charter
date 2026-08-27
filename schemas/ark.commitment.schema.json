@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "charter/ark.commitment/v1",
+  "title": "Sealed Ark commitment — the end-of-life instrument",
+  "type": "object",
+  "required": ["schema", "chain_id", "seq", "kind", "ts", "body", "prev_hash", "hash"],
+  "properties": {
+    "schema": { "const": 1 },
+    "chain_id": { "type": "string" },
+    "seq": { "type": "integer", "minimum": 1 },
+    "kind": { "const": "ark.commitment" },
+    "ts": { "type": "string" },
+    "prev_hash": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "hash": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "body": {
+      "type": "object",
+      "required": ["version", "package_sha256", "license", "trigger", "release_channels"],
+      "properties": {
+        "version": { "type": "string" },
+        "package_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$", "description": "hash of the escrowed end-of-life package (server source, tooling, docs)" },
+        "license": { "type": "string", "description": "license the package releases under, e.g. AGPL-3.0-or-later" },
+        "trigger": {
+          "type": "object",
+          "required": ["heartbeat_interval_days", "lapse_days", "explicit_cessation"],
+          "properties": {
+            "heartbeat_interval_days": { "type": "integer", "minimum": 1 },
+            "lapse_days": { "type": "integer", "minimum": 2, "description": "days without a sealed heartbeat after which the trigger fires; must exceed heartbeat_interval_days" },
+            "explicit_cessation": { "const": true }
+          }
+        },
+        "release_channels": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+        "note": { "type": "string" }
+      }
+    }
+  }
+}

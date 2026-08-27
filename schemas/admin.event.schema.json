@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "charter/admin.event/v1",
+  "title": "Sealed admin telemetry link — operator power as public event",
+  "type": "object",
+  "required": ["schema", "chain_id", "seq", "kind", "ts", "body", "prev_hash", "hash"],
+  "properties": {
+    "schema": { "const": 1 },
+    "chain_id": { "type": "string" },
+    "seq": { "type": "integer", "minimum": 1 },
+    "kind": { "const": "admin.event" },
+    "ts": { "type": "string" },
+    "occurred_at": { "type": "string" },
+    "prev_hash": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "hash": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "body": {
+      "type": "object",
+      "required": ["event", "staff_id", "justification"],
+      "properties": {
+        "event": { "enum": ["item_spawn", "teleport", "unban", "data_query", "permission_change", "config_change", "world_edit"] },
+        "staff_id": { "type": "string", "description": "attributed, never anonymous" },
+        "justification": { "type": "string", "minLength": 1 },
+        "target": { "type": ["string", "null"], "description": "player pseudonym or system target" },
+        "params": { "type": "object" },
+        "authorization": {
+          "type": "object",
+          "description": "REQUIRED for event=unban: reference to an overturned enforcement decision",
+          "required": ["decision_seq", "decision_hash"],
+          "properties": {
+            "decision_seq": { "type": "integer", "minimum": 1 },
+            "decision_hash": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+          }
+        }
+      }
+    }
+  }
+}

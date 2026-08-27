@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "charter/enforcement.action/v1",
+  "title": "Sealed enforcement action link",
+  "type": "object",
+  "required": ["schema", "chain_id", "seq", "kind", "ts", "body", "prev_hash", "hash"],
+  "properties": {
+    "schema": { "const": 1 },
+    "chain_id": { "type": "string" },
+    "seq": { "type": "integer", "minimum": 1 },
+    "kind": { "const": "enforcement.action" },
+    "ts": { "type": "string", "description": "seal time, ISO 8601 UTC" },
+    "occurred_at": { "type": "string", "description": "client event time when it differs from seal time" },
+    "prev_hash": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "hash": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "body": {
+      "type": "object",
+      "required": ["subject", "action", "reason_code", "policy_version", "policy_seq", "evidence_sha256", "actor_role", "actor_id"],
+      "properties": {
+        "subject": { "type": "string", "description": "pseudonym: sha256(salt:account)[:16]" },
+        "action": { "enum": ["warn", "suspend", "ban", "item_removal", "economy_rollback"] },
+        "reason_code": { "type": "string", "description": "must exist in the sealed policy at policy_seq" },
+        "policy_version": { "type": "string" },
+        "policy_seq": { "type": "integer", "minimum": 1 },
+        "evidence_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "actor_role": { "type": "string" },
+        "actor_id": { "type": "string" },
+        "note": { "type": "string" }
+      }
+    }
+  }
+}
